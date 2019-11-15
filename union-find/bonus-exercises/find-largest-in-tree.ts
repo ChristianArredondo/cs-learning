@@ -29,11 +29,7 @@ export class WeightedUnionMaxFind {
   }
 
   getRoot(n: number): number {
-    let nId: number = this.ids[n];
-    while (nId !== this.ids[nId]) {
-      nId = this.ids[nId];
-    }
-    return nId;
+    return this.ids[n];
   }
 
   find(n: number): number {

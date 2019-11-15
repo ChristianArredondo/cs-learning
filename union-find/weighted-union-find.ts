@@ -13,11 +13,7 @@ export class WeightedUnionFind {
   }
 
   getRoot(n): number {
-    let nId = this.ids[n];
-    while (nId !== this.ids[nId]) {
-      nId = this.ids[nId];
-    }
-    return nId;
+    return this.ids[n];
   }
 
   union(p: number, q: number): void {
