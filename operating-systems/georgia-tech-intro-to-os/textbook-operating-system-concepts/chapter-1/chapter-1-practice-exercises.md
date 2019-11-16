@@ -6,7 +6,7 @@
 
 1.2) We have stressed the need for an operating system to make efficient use of the computing hardware. When is it appropriate for the operating system to forsake this principle and to “waste” resources? Why is such a system not really wasteful?
 
-      The operating will sit idly and do nothing if there is no process or job to run. This is not really wasteful because one of the purposes of the operating system is to perform work based on input from the user, which means that if there is no input, then there is no active reason to use resources from the computing hardware.
+    The operating will sit idly and do nothing if there is no process or job to run. This is not really wasteful because one of the purposes of the operating system is to perform work based on input from the user, which means that if there is no input, then there is no active reason to use resources from the computing hardware.
 
 1.3) What is the main difficulty that a programmer must overcome in writing an operating system for a real-time environment?
 
