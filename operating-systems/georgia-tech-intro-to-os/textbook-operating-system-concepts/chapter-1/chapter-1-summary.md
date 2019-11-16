@@ -9,8 +9,6 @@
 
 ## 1.1 - What Operating Systems Do
 
----
-
 ### 1.1.1 User View
 
 - The user's view of the computer varies according to the interface
@@ -36,8 +34,6 @@
   - application programs - all programs not associated with the operating of the system
 
 ## 1.2 - Computer-System Organization
-
----
 
 ### 1.2.1 Computer-System Operation
 
@@ -96,8 +92,6 @@
 
 ## 1.3 - Computer-System Architecture
 
----
-
 ### 1.3.1 Single-Processor Systems
 
 #### Overview
@@ -127,14 +121,10 @@
 
 ## 1.4 Operating System Structure
 
----
-
 - An operating systems provides the environment within which programs are executed
 - Operating systems can vary greatly in their makeup
 
 ## 1.5 Operating-System Operations
-
----
 
 - Modern operating systems are interrupt driven
 - If there are no processes to execute, no I/O devices, and no users to whom to respond, an operating system will sit idly
@@ -160,8 +150,6 @@
 
 ## 1.6 Process Management
 
----
-
 - A program does nothing unless its instructions are executed by a CPU
 - A program in execution is a process
 - A process needs certain resources to accomplish its task
@@ -181,8 +169,6 @@
 
 ## 1.7 Memory Management
 
----
-
 - The main memory is central to the operation of a modern computer system
 - For a program to be executed it must be mapped to absolute addresses and loaded into memory
 - The operating system is responsible for:
@@ -191,8 +177,6 @@
   - allocation and deallocating memory space as needed
 
 ## 1.8 Storage Management
-
----
 
 - The operating system abstracts from the physical properties of its storage devices to define a logical storage unit, the file
 - The operating system maps files onto physical media and accesses these files via the storage devices
@@ -235,16 +219,12 @@
 
 ## 1.9 Protection and Security
 
----
-
 - Access to data must be regulated
 - Mechanisms ensure that files, memory segments, CPU, and other resources can be operated on by only those processes that have gained proper authorization from the operating system
 - Protection and security require the system to be able to distinguish amog all its users
 - Most operating systems maintain a list of user names and associated user IDs
 
 ## 1.10 Kernal Data Structure
-
----
 
 ### 1.10.1 Lists, Stacks, and Queues
 
@@ -288,8 +268,6 @@
 - Retrieving data from the table takes O(1) time
 
 ## 1.11 Computing Environments
-
----
 
 ### 1.11.1 Traditional Computing
 
