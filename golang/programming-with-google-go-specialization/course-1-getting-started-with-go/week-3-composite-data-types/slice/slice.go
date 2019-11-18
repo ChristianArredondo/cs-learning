@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 )
@@ -21,16 +22,16 @@ func main() {
 	for {
 		// get input from user
 		var s string
-		fmt.Println("Please enter an integer (enter 'x' to exit)")
+		fmt.Println("Please enter an integer (enter 'X' to exit)")
 		_, err := fmt.Scanln(&s)
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
 
 		// exit if input is 'x'
-		if s == "x" {
+		if s == "X" {
 			fmt.Println("Exiting program")
-			break
+			os.Exit(0)
 		}
 
 		// convert input to integer
