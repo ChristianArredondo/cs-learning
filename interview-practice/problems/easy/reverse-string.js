@@ -1,3 +1,4 @@
+// O(string.length)
 function reverseString(string) {
   if (typeof string !== 'string') return;
 

@@ -1,4 +1,5 @@
 // how many pairs of matching ints in ar array
+// O(ar.length)
 function sockMerchant(n, ar) {
   const sockSet = new Set();
   let totalPairs = 0;
