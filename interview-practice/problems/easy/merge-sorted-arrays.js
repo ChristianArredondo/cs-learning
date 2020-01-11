@@ -1,6 +1,6 @@
 // merge sorted arrays and keep them sorted
 // O(arr1.length + arr2.length)
-function mergeSorted(arr1, arr2) {
+function mergeSortedArrays(arr1, arr2) {
   let i1 = 0;
   let i2 = 0;
   let merged = [];
@@ -22,7 +22,7 @@ function mergeSorted(arr1, arr2) {
   return merged;
 }
 
-console.log(mergeSorted(
+console.log(mergeSortedArrays(
   [0, 3, 4, 30],
   [-4, 6, 30]
 ));
