@@ -1,5 +1,11 @@
-// return the sum of the contiguous subarray
-// the highest sum. [4,-1,2,1] has the largest sum = 6
+/**
+ * return the sum of the contiguous subarray with
+ * the highest sum.
+ * @param {Number[]} arr 
+ * @example
+ * - for [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+ * [4,-1,2,1] has the largest sum (6)
+ */
 function maxSubarraySum(arr) {
   let globalMax = -Infinity;
   let localMax = 0;
