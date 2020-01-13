@@ -75,6 +75,26 @@ class LinkedList {
     return this;
   }
 
+  reverse() {
+    const hashTable = {};
+    let currNode = this.head;
+    for (let i = 0; i < this.length; i++) {
+      const newIndex = this.length - 1 - i;
+      hashTable[newIndex] = currNode;
+      currNode = currNode.next;
+    }
+
+    this.head = hashTable[0];
+    currNode = this.head;
+    for (let i = 0; i < this.length - 1; i++) {
+      currNode.next = hashTable[i + 1];
+      currNode = hashTable[i + 1];
+    }
+    currNode.next = null;
+    this.tail = currNode;
+    return this;
+  }
+
   print() {
     let current = this.head;
     let string = '';
@@ -120,7 +140,7 @@ list
   .print()
   .delete(1)
   .print()
-  .delete(4)
+  .reverse()
   .print()
-  .delete(0)
+  .reverse()
   .print();
