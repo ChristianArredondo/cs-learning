@@ -1,5 +1,4 @@
 
-n;
 const longestPalindromicSubstring = s => {
   if (!s || s.length === 1) {
     return s;
