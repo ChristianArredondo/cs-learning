@@ -133,6 +133,23 @@ class BinarySearchTree {
     }
   }
 
+  breadthFirstSearch() {
+    let currentNode;
+    let list = [];
+    let queue = [];
+
+    queue.push(this.root);
+
+    while (queue.length) {
+      currentNode = queue.shift();
+      list.push(currentNode.value);
+      currentNode.left && queue.push(currentNode.left);
+      currentNode.right && queue.push(currentNode.right);
+    }
+
+    return list;
+  }
+
   _getParent(value) {
     if (!this.root || this.root.value === value) {
       return null;
@@ -162,8 +179,4 @@ tree.insert(6);
 tree.insert(20);
 tree.insert(15);
 tree.insert(170);
-tree.insert(80);
-tree.insert(230);
-console.log(tree.root);
-tree.remove(9);
-console.log(tree.root);
+console.log(tree.DFSPostOrder());
