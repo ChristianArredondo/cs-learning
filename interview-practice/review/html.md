@@ -21,3 +21,12 @@
     - script: HTML parsing is blocked; the script is fetched and immediately executed;
     - script async: script is fetched in parallel to HTML parsing and executed as soon as it is available;
     - script defer: script is fetched in parallel to HTML parsing and executed only when the page has finished parsing;
+
+### HTML5 Features
+    - audio and video
+    - new semantic elements (mark, figure, data, time, output)
+    - web workers
+    - history API
+    - drag and drop
+    - focus management
+    - offline & storage
