@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <button>0</button>
+  <button>1</button>
+  <button>2</button>
+  <button>3</button>
+  <button>4</button>
+
+  <script>
+    const buttons = document.getElementsByTagName('button');
+    const handleClick = index => () => console.log('Clicked node #', index);
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', handleClick(i));
+    }
+    const isPrime = num => {
+      if (num <= 2) return true;
+
+      for (let i = 2; i < Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
+      }
+
+      return true;
+    }
+    const checkIsPrime = num => console.log(`Is ${num} prime?`, isPrime(num));
+
+    checkIsPrime(2);
+    checkIsPrime(5);
+    checkIsPrime(11);
+    checkIsPrime(33);
+
+    var text = 'outside';
+    function logIt() {
+      console.log(text);
+      var text = 'inside';
+    };
+    logIt();
+  </script>
+</body>
+
+</html>
