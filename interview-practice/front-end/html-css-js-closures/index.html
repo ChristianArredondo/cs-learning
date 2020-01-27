@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Closures</title>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script>
+    const names = ['john', 'chris', 'jessica', 'michael'];
+    const ul = document.createElement('ul');
+    const rootDiv = document.getElementById('root');
+    // non-closure
+    function buildListBlue(names) {
+      return names.map((name, i) => {
+        const li = document.createElement('li');
+        li.innerText = name;
+        if (i % 2 !== 0) {
+          li.style.color = 'blue';
+        }
+        return li;
+      });
+    }
+    // non-closure
+    function buildListRed(names) {
+      return names.map((name, i) => {
+        const li = document.createElement('li');
+        li.innerText = name;
+        if (i % 2 === 0) {
+          li.style.color = 'red';
+        }
+        return li;
+      });
+    }
+    // closure
+    function buildListWithClosure(determineColor) {
+      return function buildList(names) {
+        return names.map((name, i) => {
+          const li = document.createElement('li');
+          li.innerText = name;
+          const color = determineColor(i);
+          if (color) {
+            li.style.color = color;
+          }
+          return li;
+        });
+      }
+    }
+    
+    // blue
+    const listBlue = buildListWithClosure(i => i % 2 !== 0 ? 'blue' : null)(names);
+    listBlue.forEach(li => ul.appendChild(li));
+    // red
+    const buildRedList = buildListWithClosure(i => i % 2 === 0 ? 'red' : null);
+    const listRed1 = buildRedList(names);
+    const listRed2 = buildRedList(['christian']);
+    listRed1.forEach(li => ul.appendChild(li));
+    listRed2.forEach(li => ul.appendChild(li));
+    rootDiv.appendChild(ul);
+  </script>
+</body>
+</html>
