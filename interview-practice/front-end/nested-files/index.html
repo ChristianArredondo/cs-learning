@@ -48,20 +48,14 @@
     const filesContainer = document.getElementsByClassName('files-container')[0];
 
     // root dirs
-    const dirs = files
+    files
       .filter(({ type }) => type === 'dir')
       .forEach(dir => filesContainer.appendChild(generateDirDiv(dir, 0)));
     // root files
-    const fileTypes = files
+    files
       .filter(({ type }) => type === 'file')
       .forEach(file => filesContainer.appendChild(fileP(file, 0)));
 
-    function dirObj(name, children = []) {
-      return { name, children, type: 'dir' }
-    }
-    function fileObj(name) {
-      return { name, type: 'file' }
-    }
     function fileP(file, depth) {
       const fileP = document.createElement('p');
       fileP.className = 'file';
@@ -83,29 +77,40 @@
       // title
       const title = document.createElement('p');
       title.className = 'dir-name';
+      title.setAttribute('role', 'button');
+      title.setAttribute('aria-pressed', showFiles === false);
       title.innerText = directory.name + '/';
       title.addEventListener('click', () => {
         if (showFiles) {
           dirContentDiv.style.display = 'none';
+          title.innerText = `${directory.name} (${3}) /`;
         } else {
+          title.innerText = directory.name + '/';
           dirContentDiv.style.display = 'block';
         }
         showFiles = !showFiles;
+        title.setAttribute('aria-pressed', showFiles === false);
       })
       append(title);
 
-      // dirs
-      directory.children
-        .filter(child => child.type === 'dir')
-        .forEach(dir => dirContentDiv.appendChild(generateDirDiv(dir, depth + 1)));
+      // subDirs
+      const dirDirs = directory.children
+        .filter(child => child.type === 'dir');
+      dirDirs.forEach(dir => dirContentDiv.appendChild(generateDirDiv(dir, depth + 1)));
 
       // files
-      directory.children
-        .filter(child => child.type === 'file')
-        .forEach(file => dirContentDiv.appendChild(fileP(file, depth + 1)));
+      const dirFiles = directory.children
+        .filter(child => child.type === 'file');
+      dirFiles.forEach(file => dirContentDiv.appendChild(fileP(file, depth + 1)));
 
       append(dirContentDiv);
       return dirDiv;
+    }
+    function dirObj(name, children = []) {
+      return { name, children, type: 'dir' }
+    }
+    function fileObj(name) {
+      return { name, type: 'file' }
     }
   </script>
 </body>
