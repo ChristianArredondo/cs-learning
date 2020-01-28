@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Nested Files</title>
+  <style>
+    body {
+      margin: auto;
+      padding: 100px;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .dir .dir-name:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1 class="title">Files Dir</h1>
+  </div>
+
+  <div class="files-container"></div>
+
+  <script>
+    const nestingWidthPx = 20;
+    const getLeftMargin = (depth) => `${depth * nestingWidthPx}px`;
+    const files = [
+      dirObj('docs', [
+        fileObj('resume.docx'),
+        fileObj('sheet.xlsx'),
+        dirObj('archive', [
+          fileObj('resume.docx'),
+          fileObj('sheet.xlsx'),
+          dirObj('archive')
+        ])
+      ]),
+      fileObj('profile-pic.jpg')
+    ];
+
+    const filesContainer = document.getElementsByClassName('files-container')[0];
+
+    // root dirs
+    const dirs = files
+      .filter(({ type }) => type === 'dir')
+      .forEach(dir => filesContainer.appendChild(generateDirDiv(dir, 0)));
+    // root files
+    const fileTypes = files
+      .filter(({ type }) => type === 'file')
+      .forEach(file => filesContainer.appendChild(fileP(file, 0)));
+
+    function dirObj(name, children = []) {
+      return { name, children, type: 'dir' }
+    }
+    function fileObj(name) {
+      return { name, type: 'file' }
+    }
+    function fileP(file, depth) {
+      const fileP = document.createElement('p');
+      fileP.className = 'file';
+      fileP.style.marginLeft = getLeftMargin(depth);
+      fileP.innerText = file.name;
+      return fileP;
+    }
+    function generateDirDiv(directory, depth) {
+      // state
+      let showFiles = true;
+      let dirContentDiv = document.createElement('div');
+
+      // wrapper div
+      const dirDiv = document.createElement('div');
+      dirDiv.className = 'dir';
+      dirDiv.style.marginLeft = getLeftMargin(depth);
+      const append = el => dirDiv.appendChild(el);
+
+      // title
+      const title = document.createElement('p');
+      title.className = 'dir-name';
+      title.innerText = directory.name + '/';
+      title.addEventListener('click', () => {
+        if (showFiles) {
+          dirContentDiv.style.display = 'none';
+        } else {
+          dirContentDiv.style.display = 'block';
+        }
+        showFiles = !showFiles;
+      })
+      append(title);
+
+      // dirs
+      directory.children
+        .filter(child => child.type === 'dir')
+        .forEach(dir => dirContentDiv.appendChild(generateDirDiv(dir, depth + 1)));
+
+      // files
+      directory.children
+        .filter(child => child.type === 'file')
+        .forEach(file => dirContentDiv.appendChild(fileP(file, depth + 1)));
+
+      append(dirContentDiv);
+      return dirDiv;
+    }
+  </script>
+</body>
+
+</html>
