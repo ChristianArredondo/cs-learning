@@ -6,11 +6,11 @@ function twoSum(arr, targetInt) {
   for (let i = 0; i < arr.length; i++) {
     const int = arr[i];
     const complement = targetInt - int;
-    if (hashTable[complement]) {
+    if (typeof hashTable[complement] === 'number') {
       return [hashTable[complement], i];
     };
     hashTable[int] = i;
   }
 }
 
-console.log(twoSum([2, 7, 11, 14, 5, 5], 10));
+console.log(twoSum([2, 7, 11, 14, 5, 5], 9));
