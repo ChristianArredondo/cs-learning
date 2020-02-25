@@ -1,54 +1,39 @@
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var longestPalindrome = function (s) {
+  if (!s || !s.length) return '';
 
-const longestPalindromicSubstring = s => {
-  if (!s || s.length === 1) {
-    return s;
-  }
+  let maxLengthPali = '';
 
-  const table = {};
   for (let i = 0; i < s.length; i++) {
-    const char = s[i];
-    if (!table[char]) table[char] = [];
-    table[char].push(i);
+    const paliAtCenterI = getLongestPali(s, i, i);
+    const palyAroundCenterI = getLongestPali(s, i, i + 1);
+    if (paliAtCenterI.length > maxLengthPali.length) maxLengthPali = paliAtCenterI;
+    if (palyAroundCenterI.length > maxLengthPali.length) maxLengthPali = palyAroundCenterI;
   }
 
-  let globalMaxLength = 0;
-  let globalMaxPalindrome = '';
-  Object.keys(table).forEach(key => {
-    const duplicatesArr = table[key];
-    if (!duplicatesArr || !duplicatesArr.length) return;
-    const { length, palindrome } = checkPalindromes(s, duplicatesArr);
-    if (length > globalMaxLength) {
-      globalMaxLength = length;
-      globalMaxPalindrome = palindrome;
-    }
-  });
-
-  return globalMaxPalindrome || s[0];
+  return maxLengthPali;
 };
 
-function checkPalindromes(s, arr) {
-  let length = 0;
-  let palindrome = '';
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = arr.length - 1; j > i; j--) {
-      if (arr[j] + 1 - arr[i] <= length) continue;
-      const substring = s.slice(arr[i], arr[j] + 1);
-      if (isPalindrome(substring)) {
-        length = substring.length;
-        palindrome = substring;
-      }
+function getLongestPali(string, left, right) {
+  let pali = '';
+  const isInBounds = () => left >= 0 && right < string.length;
+
+  while (string[left] === string[right] && isInBounds()) {
+    if (left === right) {
+      pali = string[left];
+    } else {
+      pali = string[left] + pali + string[right];
     }
+    left--;
+    right++;
   }
 
-  return { length, palindrome };
+  return pali;
 }
 
-function isPalindrome(s) {
-  const reversed = s
-    .split('')
-    .reverse()
-    .join('');
-  return s === reversed;
-}
-
-console.log(longestPalindromicSubstring('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
+console.log('\n');
+console.log(longestPalindrome('ba'));
+console.log(longestPalindrome('racecar'));
