@@ -30,6 +30,24 @@ const insertionSort = nums => {
 
   return sortedList;
 };
+const insertionSortInPlace = nums => {
+
+  for (let i = 0; i < nums.length; i++) {
+    const currNum = nums[i];
+    if (currNum < nums[0]) {
+      nums.unshift(nums.splice(i, 1)[0]);
+    } else if (currNum < nums[i - 1]) {
+      for (let j = 0; j < i; j++) {
+        if (currNum < nums[j]) {
+          nums.splice(j, 0, nums.splice(i, 1)[0]);
+          break;
+        }
+      }
+    }
+  }
+
+  return nums;
+};
 
 console.log('\n');
-console.log(insertionSort([3, 1, 5, 6, -1, 2, 9, 2]));
+console.log(insertionSortInPlace([3, 1, 5, 6, -1, 2, 9, 2]));
