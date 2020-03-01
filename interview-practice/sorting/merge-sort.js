@@ -13,7 +13,6 @@ const merge = (arr1, arr2) => {
 };
 const mergeSort = nums => {
   if (nums.length === 1) return [nums[0]];
-  if (nums.length === 2) return nums[0] <= nums[1] ? [nums[0], nums[1]] : [nums[1], nums[0]];
 
   const mid = Math.floor(nums.length / 2);
   return merge(
