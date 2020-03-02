@@ -1,35 +1,43 @@
-
-const insertMerge = (intervals, toInsert) => {
-  const length = intervals.length;
-  if (toInsert[1] < intervals[0][0]) return [toInsert, ...intervals];
-  if (toInsert[0] > intervals[length - 1][1]) return [...intervals, toInsert];
-
-  const merged = [];
-  let i = 0;
-
-  // lesser than toInsert
-  while (i < length && intervals[i][1] < toInsert[0]) {
-    merged.push(intervals[i]);
-    i++;
+/**
+ * @param {number[][]} intervals
+ * @return {number[][]}
+ */
+var merge = function (intervals) {
+  if (intervals.length <= 1) return intervals;
+  intervals.sort((a, b) => a[0] - b[0]);
+  let pointer = 0;
+  while (pointer < intervals.length) {
+    const curr = intervals[pointer];
+    const next = intervals[pointer + 1];
+    if (!next || curr[1] < next[0]) pointer++;
+    else intervals.splice(pointer, 0, mergeTwo(...intervals.splice(pointer, 2)));
   }
-
-  // overlap with toInsert
-  while (i < length && toInsert[1] >= intervals[i][0]) {
-    toInsert[0] = Math.min(toInsert[0], intervals[i][0]);
-    toInsert[1] = Math.max(toInsert[1], intervals[i][1]);
-    i++;
-  }
-  merged.push(toInsert);
-
-  // greater than toInsert
-  while (i < length) {
-    merged.push(intervals[i]);
-    i++;
-  }
-
-  return merged;
+  return intervals;
 };
 
-console.log(insertMerge([[2, 3], [4, 7], [9, 10]], [-1, 0]));
-console.log(insertMerge([[2, 3], [4, 7], [9, 10]], [5, 6]));
-console.log(insertMerge([[2, 3], [4, 7], [9, 10]], [13, 14]));
+const mergeTwo = (interval1, interval2) => [
+  Math.min(interval1[0], interval2[0]),
+  Math.max(interval1[1], interval2[1])
+];
+
+console.log('\n');
+console.log(merge([
+  [1, 3],
+  [2, 6],
+  [8, 10],
+  [15, 18]
+]));
+console.log(merge([
+  [1, 4],
+  [1, 5],
+]));
+console.log(merge([
+  [1, 4],
+  [2, 3],
+]));
+console.log(merge([
+  [1, 4],
+  [0, 2],
+  [3, 5]
+]));
+console.log(merge([[5, 5], [1, 3], [3, 5], [4, 6], [1, 1], [3, 3], [5, 6], [3, 3], [2, 4], [0, 0]]));
