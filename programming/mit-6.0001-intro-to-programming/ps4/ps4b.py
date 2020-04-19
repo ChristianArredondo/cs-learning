@@ -265,3 +265,9 @@ if __name__ == '__main__':
    # Encrypted story
    story_ciphertext = CiphertextMessage(get_story_string())
    print(story_ciphertext.decrypt_message())
+
+   # Test
+   my_plaintext = PlaintextMessage('someone set us up the bomb', 13)
+   print('My plaintext:', my_plaintext.get_message_text_encrypted())
+   my_plain_ciphertext = CiphertextMessage(my_plaintext.get_message_text_encrypted())
+   print('My plaintext decrypted:', my_plain_ciphertext.decrypt_message())
