@@ -70,7 +70,8 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
     
     def get_message_text(self):
         '''
@@ -78,7 +79,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +88,7 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.valid_words
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -109,7 +110,13 @@ class SubMessage(object):
                  another letter (string). 
         '''
         
-        pass #delete this line and replace with your code here
+        vowels_dict = {}
+        for i in range(len(vowels_permutation)):
+            vowels_dict[VOWELS_LOWER[i]] = vowels_permutation[i].lower()
+            vowels_dict[VOWELS_UPPER[i]] = vowels_permutation[i].upper()
+        return vowels_dict
+
+
     
     def apply_transpose(self, transpose_dict):
         '''
@@ -119,7 +126,13 @@ class SubMessage(object):
         on the dictionary
         '''
         
-        pass #delete this line and replace with your code here
+        encrypted_text = ''
+        for char in self.message_text:
+            if char in VOWELS_LOWER or char in VOWELS_UPPER:
+                encrypted_text += transpose_dict[char]
+            else:
+                encrypted_text += char
+        return encrypted_text
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -132,7 +145,7 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -152,7 +165,25 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+
+        best_total_decrypted = 0
+        decrypted_message = None
+
+        for perm in get_permutations(VOWELS_UPPER):
+            total_decrypted_for_current_perm = 0
+            decrypted = self.apply_transpose(self.build_transpose_dict(perm))
+            for word in decrypted.split(' '):
+                if is_word(self.valid_words, word):
+                    total_decrypted_for_current_perm += 1
+
+            if total_decrypted_for_current_perm > best_total_decrypted:
+                best_total_decrypted = total_decrypted_for_current_perm
+                decrypted_message = decrypted
+
+        if best_total_decrypted == 0:
+            return self.message_text
+        else:
+            return decrypted_message                    
     
 
 if __name__ == '__main__':
