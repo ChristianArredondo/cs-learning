@@ -60,8 +60,19 @@ def is_word_guessed(secret_word, letters_guessed):
     returns: boolean, True if all the letters of secret_word are in letters_guessed;
       False otherwise
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+
+    # build dictionary of letter counts in guesses
+    guess_char_dict = {}
+    for letter in letters_guessed:
+        guess_char_dict[letter] = True
+
+    # ensure every letter in secret_word exists in dict
+    for letter in secret_word:
+        if not letter in guess_char_dict:
+            return False
+    return True
+        
+    
 
 
 
@@ -72,8 +83,20 @@ def get_guessed_word(secret_word, letters_guessed):
     returns: string, comprised of letters, underscores (_), and spaces that represents
       which letters in secret_word have been guessed so far.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    guessed_chars_dict = {}
+    for letter in letters_guessed:
+        guessed_chars_dict[letter] = True
+    
+    guessed_word = ''
+    for letter in secret_word:
+        if not letter in guessed_chars_dict:
+            guessed_word += '_ '
+        else:
+            guessed_word += letter
+    
+    return guessed_word
+
+  
 
 
 
@@ -83,8 +106,16 @@ def get_available_letters(letters_guessed):
     returns: string (of letters), comprised of letters that represents which letters have not
       yet been guessed.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    guessed_chars_dict = {}
+    for letter in letters_guessed:
+        guessed_chars_dict[letter] = True
+
+    available_letters = ''
+    for letter in string.ascii_lowercase:
+      if not letter in guessed_chars_dict:
+        available_letters += letter
+    
+    return available_letters
     
     
 
@@ -113,8 +144,61 @@ def hangman(secret_word):
     
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+
+    remaining_guesses = 6
+    remaining_warnings = 3
+    letters_guessed = []
+    
+    print('Welcome to the game Hangman! ')
+    print('I am thinking of a word that is', len(secret_word), 'letters long. ')
+    print('-------------')
+
+    while remaining_guesses > 0:
+        print('You have', remaining_warnings, 'warnings left. ')
+        print('You have', remaining_guesses, 'guesses left. ')
+        print('Available letters:', get_available_letters(letters_guessed))
+
+        has_valid_guess = False
+        new_guess = None
+
+        while not has_valid_guess:
+            new_guess = input('Please guess a letter: ').lower()
+            if new_guess in letters_guessed:
+              if remaining_warnings == 0:
+                  print('Oops! You\'ve already guessed that letter')
+                  print('You have no warnings left. Game over.')
+                  return
+              remaining_warnings -= 1
+              print('Oops! You\'ve already guessed that letter. You now have', remaining_warnings, 'warnings')
+            elif not new_guess in string.ascii_lowercase:
+                    if remaining_warnings == 0:
+                        print('Oops! That is not a valid guess')
+                        print('You have no warnings left. Game over.')
+                        return
+                    remaining_warnings -= 1
+                    print('Oops! That is not a valid guess. You now have', remaining_warnings, 'warnings')
+            else:
+                has_valid_guess = True
+        
+        letters_guessed.append(new_guess)
+        if new_guess in secret_word:
+            print('Good guess:', get_guessed_word(secret_word, letters_guessed))
+            if is_word_guessed(secret_word, letters_guessed):
+                print('Congratulations, you won!')
+                print('Your total score for this game is:', (6 - remaining_guesses) * len(set(secret_word)))
+                return
+        else:
+            print('Oops! That letter is not in my word:', get_guessed_word(secret_word, letters_guessed))
+            if new_guess in 'aeiou':
+                remaining_guesses -= 2
+            else:
+                remaining_guesses -= 1
+        
+        print('-------------')
+
+    print('Sorry, you ran out of guesses. The word was', secret_word)
+
+        
 
 
 
