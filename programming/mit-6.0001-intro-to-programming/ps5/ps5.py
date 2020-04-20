@@ -54,7 +54,28 @@ def process(url):
 
 # Problem 1
 
-# TODO: NewsStory
+class NewsStory(object):
+    def __init__(self, guid, title, description, link, pubdate):
+        self.guid = guid
+        self.title = title
+        self.description = description
+        self.link = link
+        self.pubdate = pubdate
+
+    def get_guid(self):
+        return self.guid
+
+    def get_title(self):
+        return self.title
+
+    def get_description(self):
+        return self.description
+
+    def get_link(self):
+        return self.link
+
+    def get_pubdate(self):
+        return self.pubdate
 
 
 #======================
@@ -73,13 +94,51 @@ class Trigger(object):
 # PHRASE TRIGGERS
 
 # Problem 2
-# TODO: PhraseTrigger
+def has_alpha_char(text, index):
+    if index < 0 or index >= len(text):
+        return False
+    return text[index] in string.ascii_lowercase
+
+def strip_punctuation(text):
+    for punc in string.punctuation:
+        text = text.replace(punc, ' ')
+    maybe_words = text.split(' ')
+    words_only = []
+    for word in maybe_words:
+        if len(word) > 0 and not word.isspace():
+            words_only.append(word)
+    return ' '.join(words_only)
+    
+
+class PhraseTrigger(Trigger):
+    def __init__(self, phrase):
+        self.phrase = phrase.lower()
+    
+    def get_phrase(self):
+        return self.phrase
+    
+    def is_phrase_in(self, text):
+        lower_text = strip_punctuation(text.lower())
+        if not self.phrase in lower_text:
+            return False
+        phrase_index = lower_text.index(self.phrase)
+        return not has_alpha_char(lower_text, phrase_index - 1) and not has_alpha_char(lower_text, phrase_index + len(self.phrase))
 
 # Problem 3
-# TODO: TitleTrigger
+class TitleTrigger(PhraseTrigger):
+    def __init__(self, phrase):
+        PhraseTrigger.__init__(self, phrase)
+    
+    def evaluate(self, story):
+        return self.is_phrase_in(story.get_title())
 
 # Problem 4
-# TODO: DescriptionTrigger
+class DescriptionTrigger(PhraseTrigger):
+    def __init__(self, phrase):
+        PhraseTrigger.__init__(self, phrase)
+
+    def evaluate(self, story):
+        return self.is_phrase_in(story.get_description())
 
 # TIME TRIGGERS
 
@@ -88,22 +147,59 @@ class Trigger(object):
 # Constructor:
 #        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
 #        Convert time from string to a datetime before saving it as an attribute.
+class TimeTrigger(Trigger):
+    def __init__(self, est_time_string):
+        self.pubdate = datetime.strptime(est_time_string, '%d %b %Y %H:%M:%S')
+    
+    def get_pubdate(self):
+        return self.pubdate
 
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
+class BeforeTrigger(TimeTrigger):
+    def __init__(self, est_time_string):
+        TimeTrigger.__init__(self, est_time_string)
 
+    def evaluate(self, story):
+        return story.get_pubdate().replace(tzinfo=None) < self.get_pubdate()
+
+class AfterTrigger(TimeTrigger):
+    def __init__(self, est_time_string):
+        TimeTrigger.__init__(self, est_time_string)
+
+    def evaluate(self, story):
+        return self.get_pubdate() < story.get_pubdate().replace(tzinfo=None)
 
 # COMPOSITE TRIGGERS
 
 # Problem 7
 # TODO: NotTrigger
+class NotTrigger(Trigger):
+    def __init__(self, T):
+        self.T = T
+    
+    def evaluate(self, story):
+        return not self.T.evaluate(story)
 
 # Problem 8
 # TODO: AndTrigger
+class AndTrigger(Trigger):
+    def __init__(self, T1, T2):
+        self.t1 = T1
+        self.t2 = T2
+    
+    def evaluate(self, story):
+        return self.t1.evaluate(story) and self.t2.evaluate(story)
 
 # Problem 9
 # TODO: OrTrigger
-
+class OrTrigger(Trigger):
+    def __init__(self, T1, t2):
+        self.t1 = T1
+        self.t2 = t2
+    
+    def evaluate(self, story):
+        return self.t1.evaluate(story) or self.t2.evaluate(story)
 
 #======================
 # Filtering
@@ -116,10 +212,13 @@ def filter_stories(stories, triggerlist):
 
     Returns: a list of only the stories for which a trigger in triggerlist fires.
     """
-    # TODO: Problem 10
-    # This is a placeholder
-    # (we're just returning all the stories, with no filtering)
-    return stories
+    matched_stories = []
+    for story in stories:
+        for trigger in triggerlist:
+            if trigger.evaluate(story):
+                matched_stories.append(story)
+                break
+    return matched_stories
 
 
 
@@ -146,12 +245,33 @@ def read_trigger_config(filename):
     # TODO: Problem 11
     # line is the list of lines that you need to parse and for which you need
     # to build triggers
+    triggers_dict = {}
+    active_triggers = []
+    def assign_trigger(name, t):
+        triggers_dict[name] = t
+    for line in lines:
+        t_config = line.split(',')
+        t_name = t_config[0]
+        t_type_lower = t_config[1].lower()
+        if t_type_lower == 'title':
+            trigger = TitleTrigger(t_config[2])
+            assign_trigger(t_name, trigger)
+        elif t_type_lower == 'description':
+            trigger = DescriptionTrigger(t_config[2])
+            assign_trigger(t_name, trigger)
+        elif t_type_lower == 'after':
+            trigger = AfterTrigger(t_config[2])
+            assign_trigger(t_name, trigger)
+        elif t_type_lower == 'and':
+            trigger = AndTrigger(triggers_dict[t_config[2]], triggers_dict[t_config[3]])
+        elif t_name.lower() == 'add':
+            active_triggers.extend(t_config[1:])
 
-    print(lines) # for now, print it so you see what it contains!
+    return active_triggers
 
 
 
-SLEEPTIME = 120 #seconds -- how often we poll
+SLEEPTIME = 5 #seconds -- how often we poll
 
 def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
@@ -165,7 +285,7 @@ def main_thread(master):
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
-        # triggerlist = read_trigger_config('triggers.txt')
+        triggerlist = read_trigger_config('triggers.txt')
         
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
